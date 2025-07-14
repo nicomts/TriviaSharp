@@ -1,4 +1,5 @@
 namespace TriviaSharp.Models;
+using TriviaSharp.Models.Enums;
 
 public class Question
 {
