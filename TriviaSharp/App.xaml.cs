@@ -5,7 +5,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-        Console.WriteLine("test");
+        LocalTest.Main();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)

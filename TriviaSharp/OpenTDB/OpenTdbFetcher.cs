@@ -8,6 +8,7 @@ public class OpenTdbFetcher
     private static readonly HttpClient _httpClient = new HttpClient();
     private const string BaseApiUrl = "https://opentdb.com/api.php";
     private const string TokenApiUrl = "https://opentdb.com/api_token.php";
+    private const string CategoriesApiUrl = "https://opentdb.com/api_category.php";
 
     /// <summary>
     /// Fetches a session token from the OpenTDB API.
@@ -52,6 +53,49 @@ public class OpenTdbFetcher
         }
     }
 
+    /// <summary>
+    /// Fetches the list of trivia categories from the OpenTDB API.
+    /// </summary>
+    /// <returns>An array of Category objects.</returns>
+    /// <exception cref="Exception">Thrown if there's an error fetching or deserializing the data.</exception>
+    public static async Task<ApiCategory[]> GetTriviaCategoriesAsync()
+    {
+        try
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(CategoriesApiUrl);
+            response.EnsureSuccessStatusCode(); // Throws an exception for 4xx or 5xx status codes
+
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            // Deserialize the JSON string into the ApiCategoryResponse object
+            var apiResponse = JsonSerializer.Deserialize<ApiCategoryResponse>(jsonResponse, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = false // Set to false because "TriviaCategories" exactly matches "trivia_categories" in JSON
+            });
+
+            if (apiResponse?.TriviaCategories == null)
+            {
+                throw new Exception("Failed to deserialize categories or no categories found in the response.");
+            }
+
+            return apiResponse.TriviaCategories;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new Exception($"Network error fetching categories: {ex.Message}", ex);
+        }
+        catch (JsonException ex)
+        {
+            throw new Exception($"Error deserializing JSON categories: {ex.Message}", ex);
+        }
+        catch (Exception ex)
+        {
+            // Re-throw any other exceptions
+            throw new Exception($"An unexpected error occurred while fetching categories: {ex.Message}", ex);
+        }
+    }
+    
+    
     /// <summary>
     /// Retrieves trivia questions from the OpenTDB API.
     /// </summary>
