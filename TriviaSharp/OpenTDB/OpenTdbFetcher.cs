@@ -148,8 +148,6 @@ public class OpenTdbFetcher
 
         uriBuilder.Query = query.ToString();
         string apiUrl = uriBuilder.ToString();
-        //TEST CODE
-        Console.WriteLine($"API URL: {apiUrl}"); // Debugging line to see the constructed URL
 
         try
         {
@@ -157,9 +155,6 @@ public class OpenTdbFetcher
             response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP status code is an error
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
-            
-            //TEST CODE
-            Console.WriteLine($"JSON Response: {jsonResponse}"); // Debugging line to see the raw JSON response
             
             var apiResponse = JsonSerializer.Deserialize<ApiResponse>(jsonResponse, new JsonSerializerOptions
             {
