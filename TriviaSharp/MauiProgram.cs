@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using TriviaSharp.Data;
 using TriviaSharp.Data.Repositories;
+using TriviaSharp.OpenTDB;
+using TriviaSharp.Services;
 
 namespace TriviaSharp;
 
@@ -28,6 +30,8 @@ public static class MauiProgram
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IQuizSessionRepository, QuizSessionRepository>();
         builder.Services.AddScoped<IQuestionSetRepository, QuestionSetRepository>();
+        builder.Services.AddScoped<OpenTdbFetcher>();
+        builder.Services.AddScoped<OpenTdbService>();
 
 
 #if DEBUG

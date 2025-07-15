@@ -14,4 +14,12 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
             .Include(q => q.Answers)
             .ToListAsync();
     }
+    
+    public async Task<IEnumerable<Question>> GetByTextAsync(string text)
+    {
+        return await _context.Questions
+            .Where(q => q.Text.Contains(text))
+            .Include(q => q.Answers)
+            .ToListAsync();
+    }
 }

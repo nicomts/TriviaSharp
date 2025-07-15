@@ -76,7 +76,16 @@ public class OpenTdbService
                 Category = category,
                 QuestionSet = questionSet
             };
-            await _questionRepo.AddAsync(question);
+            
+            // Ensure question does not already exist
+            var existingQuestion = await _questionRepo.GetByTextAsync(question.Text);
+            if (existingQuestion == null)
+            {
+                // Add question to the repository
+                await _questionRepo.AddAsync(question);
+            }
+            
+            
 
             // Map API answers to local Answer model
             var correctAnswer = new Answer

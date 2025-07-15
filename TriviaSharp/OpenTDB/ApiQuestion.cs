@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 public class ApiQuestion
 {
     // Private backing fields for properties that need decoding
+    private string _category;
     private string _question;
     private string _correctAnswer;
     private List<string> _incorrectAnswers;
@@ -19,7 +20,11 @@ public class ApiQuestion
     public string Difficulty { get; set; }
 
     [JsonPropertyName("category")]
-    public string Category { get; set; }
+    public string Category
+    {
+        get => _category;
+        set => _category = HttpUtility.HtmlDecode(value);
+    }
 
     [JsonPropertyName("question")]
     public string QuestionText
