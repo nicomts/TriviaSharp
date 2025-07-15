@@ -56,7 +56,7 @@ public class OpenTdbFetcher
     /// <summary>
     /// Fetches the list of trivia categories from the OpenTDB API.
     /// </summary>
-    /// <returns>An array of Category objects.</returns>
+    /// <returns>An array of ApiCategory objects.</returns>
     /// <exception cref="Exception">Thrown if there's an error fetching or deserializing the data.</exception>
     public static async Task<ApiCategory[]> GetTriviaCategoriesAsync()
     {
@@ -105,7 +105,7 @@ public class OpenTdbFetcher
     /// <param name="type">Type: "multiple" or "boolean".</param>
     /// <param name="sessionToken">Optional session token to prevent duplicate questions.</param>
     /// <param name="encoding">Encoding: "default", "urlLegacy", "url3986", "base64".</param>
-    /// <returns>An array of Question objects.</returns>
+    /// <returns>An array of ApiQuestion objects.</returns>
     /// <exception cref="Exception">Thrown in case of API errors or invalid parameters.</exception>
     public static async Task<ApiQuestion[]> GetTriviaQuestionsAsync(
         int amount,

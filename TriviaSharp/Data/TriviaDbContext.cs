@@ -7,6 +7,7 @@ public class TriviaDbContext : DbContext
 
     public DbSet<Question> Questions => Set<Question>();
     public DbSet<Answer> Answers => Set<Answer>();
+    public DbSet<Category> Categories => Set<Category>();
     public DbSet<User> Users => Set<User>();
     public DbSet<QuizSession> QuizSessions => Set<QuizSession>();
     public DbSet<QuestionSet> QuestionSets => Set<QuestionSet>();
