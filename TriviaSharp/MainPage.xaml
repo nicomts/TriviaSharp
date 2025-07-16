@@ -36,6 +36,10 @@
                 Text="Go to Login"
                 Clicked="OnLoginButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="Register"
+                Clicked="OnRegisterButtonClicked"
+                HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 

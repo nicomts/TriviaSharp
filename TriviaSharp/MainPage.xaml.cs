@@ -5,6 +5,7 @@ using TriviaSharp.Services;
 using TriviaSharp.Views;
 using Microsoft.EntityFrameworkCore;
 using TriviaSharp.Data.Repositories;
+using TriviaSharp.Models.Enums;
 
 //DEBUG CODE
 // using TriviaSharp.Services;
@@ -41,11 +42,14 @@ public partial class MainPage : ContentPage
         context.Database.EnsureCreated();
         return context;
     }
-    TriviaDbContext dbContext = SetupDatabase();
-    
-    UserRepository userRepo = new Data.Repositories.UserRepository(dbContext);
-    UserService userService = new Services.UserService(userRepo);
-    
+    // TriviaDbContext dbContext = SetupDatabase();
+    //
+    // UserRepository userRepo = new Data.Repositories.UserRepository(dbContext);
+    // UserService userService = new Services.UserService(userRepo);
+    TriviaDbContext dbContext;
+    UserRepository userRepo;
+    UserService userService;
+    UserRole currentUserRole = UserRole.Regular; // Default role, can be changed based on login
     
     
     int count = 0;
@@ -53,6 +57,11 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        
+        // Initialize in constructor
+        dbContext = SetupDatabase();
+        userRepo = new Data.Repositories.UserRepository(dbContext);
+        userService = new Services.UserService(userRepo);
     }
 
     private void OnCounterClicked(object? sender, EventArgs e)
@@ -74,5 +83,9 @@ public partial class MainPage : ContentPage
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new LoginPage(userService));
+    }
+    private async void OnRegisterButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new RegistrationPage(userService, currentUserRole));
     }
 }

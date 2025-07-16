@@ -24,7 +24,7 @@ public class UserService
     /// <param name="username">The username of the new user.</param>
     /// <param name="password">The password for the new user.</param>
     /// <param name="role">The role of the new user (e.g., Regular, Admin).</param>
-    /// <returns>A boolean indicating whether the registration was successful.</returns>
+    /// <returns>A boolean indicating whether the registration was successful. If user already exists, returns false</returns>
     public async Task<bool> RegisterAsync(string username, string password, UserRole role)
     {
         var existingUser = await _userRepository.GetByUsernameAsync(username);
