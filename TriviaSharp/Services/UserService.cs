@@ -8,6 +8,11 @@ using BCrypt.Net;
 public class UserService
 {
     private readonly IUserRepository _userRepository;
+    
+    /// <summary>
+    /// Constructor for UserService.
+    /// </summary>
+    /// <param name="userRepository">An instance of IUserRepository to interact with user data.</param>
     public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
