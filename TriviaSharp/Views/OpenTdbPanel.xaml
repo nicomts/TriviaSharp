@@ -5,8 +5,10 @@
              x:Class="TriviaSharp.Views.OpenTdbPanel">
     <ScrollView>
     <StackLayout Padding="20" Spacing="10">
+        <Label Text="Session Token" FontSize="32" HorizontalOptions="Center"/>
         <Button Text="Get Session Token" Clicked="OnSessionTokenButtonClicked"/>
         <Label x:Name="SessionTokenLabel" TextColor="DeepSkyBlue"/>
+        <Label Text="Select category:" FontSize="32" HorizontalOptions="Center"/>
         <Button Text="Get Categories" Clicked="OnCategoriesButtonClicked"/>
         <CollectionView x:Name="CategoriesCollectionView"
                         IsVisible="False"

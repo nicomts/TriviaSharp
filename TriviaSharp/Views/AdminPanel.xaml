@@ -10,7 +10,7 @@
                 Spacing="25">
                 
                 <Button
-                    Text="OpenTDB Settings"
+                    Text="Import OpenTDB Questions"
                     Clicked="OnOpenTdbButtonClicked"
                     HorizontalOptions="Fill" /> 
             
