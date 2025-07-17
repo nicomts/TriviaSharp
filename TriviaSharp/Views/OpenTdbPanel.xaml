@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TriviaSharp.Views.OpenTdbPanel">
+    <ScrollView>
+    <StackLayout Padding="20" Spacing="10">
+        <Button Text="Get Session Token" Clicked="OnSessionTokenButtonClicked"/>
+        <Label x:Name="SessionTokenLabel" TextColor="DeepSkyBlue"/>
+        <Button Text="Get Categories" Clicked="OnCategoriesButtonClicked"/>
+        <CollectionView x:Name="CategoriesCollectionView"
+                        IsVisible="False"
+                        SelectionMode="Single"
+                        SelectionChanged="OnCategorySelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Name}" Padding="10"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="Number of questions to retrieve:" FontSize="32" HorizontalOptions="Center"/>
+        <Entry x:Name="NumberEntry"
+               Placeholder="Enter a number (1-50)"
+               Keyboard="Numeric"
+               TextChanged="OnNumberEntryChanged"
+               MaxLength="2"
+               Margin="0,10,0,10"/>
+        <Label x:Name="NumberErrorLabel" TextColor="Red" IsVisible="False"/>
+        <Label Text="Select type:" FontSize="32" HorizontalOptions="Center"/>
+        <CollectionView x:Name="TypeCollectionView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnTypeSelected"
+                        Margin="0,10,0,10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Display}" Padding="10"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="Select difficulty:" FontSize="32" HorizontalOptions="Center"/>
+        <CollectionView x:Name="DifficultyCollectionView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnDifficultySelected"
+                        Margin="0,10,0,10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding}" Padding="10"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="Get Questions" Clicked="OnGetQuestionsButtonClicked"/>
+        <Label x:Name="RequestWarning" TextColor="Red" IsVisible="True"/>
+
+        
+    </StackLayout>
+    </ScrollView>
+</ContentPage>

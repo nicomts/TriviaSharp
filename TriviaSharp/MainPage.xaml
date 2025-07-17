@@ -40,6 +40,12 @@
                 Text="Register"
                 Clicked="OnRegisterButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="Admin Panel"
+                Clicked="OnAdminPanelButtonClicked"
+                HorizontalOptions="Fill" />
+            
+            
         </VerticalStackLayout>
     </ScrollView>
 

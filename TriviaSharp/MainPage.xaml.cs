@@ -47,6 +47,12 @@ public partial class MainPage : ContentPage
     UserRepository userRepo;
     UserService userService;
     
+    QuestionRepository questionRepo;
+    AnswerRepository answerRepo;
+    CategoryRepository categoryRepo;
+    QuestionSetRepository questionSetRepo;
+    OpenTdbService openTdbService;
+    
     
     int count = 0;
 
@@ -58,8 +64,22 @@ public partial class MainPage : ContentPage
         dbContext = SetupDatabase();
         userRepo = new Data.Repositories.UserRepository(dbContext);
         userService = new Services.UserService(userRepo);
+        questionRepo = new Data.Repositories.QuestionRepository(dbContext);
+        answerRepo = new Data.Repositories.AnswerRepository(dbContext);
+        categoryRepo = new Data.Repositories.CategoryRepository(dbContext);
+        questionSetRepo = new Data.Repositories.QuestionSetRepository(dbContext);
+        openTdbService = new Services.OpenTdbService(
+            questionRepo,
+            answerRepo,
+            categoryRepo,
+            questionSetRepo
+        );
+        
     }
 
+  
+    
+    
     private void OnCounterClicked(object? sender, EventArgs e)
     {
         count++;
@@ -80,4 +100,10 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new RegistrationPage(userService, UserSessionService.Instance.CurrentUser));
     }
+    private async void OnAdminPanelButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new AdminPanel(openTdbService));
+    }
+    
+    
 }
