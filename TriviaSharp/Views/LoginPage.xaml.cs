@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using TriviaSharp.Data.Repositories;
 using TriviaSharp.Services;
 using Microsoft.EntityFrameworkCore;
+using TriviaSharp.Models;
+using TriviaSharp.Models.Enums;
 
 namespace TriviaSharp.Views;
 
@@ -36,7 +38,20 @@ public partial class LoginPage : ContentPage
         var username = UsernameEntry.Text;
         var password = PasswordEntry.Text;
         var loginResult = await _userService.LoginAsync(username, password);
-        MessageLabel.Text = loginResult.Status.ToString();
+        switch (loginResult.Status) { 
+            case LoginStatus.Success:
+                UserSessionService.Instance.CurrentUser = loginResult.User; // Set the current user
+                await DisplayAlert("Login Successful", $"Welcome, {UserSessionService.Instance.CurrentUser.Username}!", "OK");
+                await Navigation.PopAsync(); // Navigate back to the previous page
+                break;
+            case LoginStatus.UserNotFound:
+                await DisplayAlert("Login Failed", "User not found. Please check your username.", "OK");
+                break;
+            case LoginStatus.IncorrectPassword:
+                await DisplayAlert("Login Failed", "Incorrect password. Please try again.", "OK");
+                break;
+        }
+        
 
     }
 }

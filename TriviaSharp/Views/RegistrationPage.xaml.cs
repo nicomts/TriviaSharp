@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TriviaSharp.Models.Enums;
 using TriviaSharp.Services;
+using TriviaSharp.Models;
 
 namespace TriviaSharp.Views;
 
@@ -13,12 +14,17 @@ public partial class RegistrationPage : ContentPage
     private UserRole _newUserRole;
     private UserService _userService;
     
-    public RegistrationPage(UserService userService, UserRole currentUserRole)
+    public RegistrationPage(UserService userService, User currentUser)
     {
         InitializeComponent();
 
         _userService = userService;
-        if (currentUserRole == UserRole.Admin)
+        if (currentUser == null)
+        {
+            AdminRoleCheckBox.IsEnabled = false;
+            AdminRoleCheckBox.IsChecked = false; // Disable admin role selection for non-admin users
+        }
+        else if (currentUser.Role == UserRole.Admin)
         {
             AdminRoleCheckBox.IsEnabled = true;
         } 
