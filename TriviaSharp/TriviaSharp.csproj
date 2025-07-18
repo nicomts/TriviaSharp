@@ -73,8 +73,4 @@
         <PackageReference Include="System.Net.Http.Json" Version="9.0.7" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Utils\" />
-    </ItemGroup>
-
 </Project>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TriviaSharp.OpenTDB;
 using TriviaSharp.Models.Enums;
 using TriviaSharp.Services;
+using TriviaSharp.Utils;
 
 namespace TriviaSharp.Views;
 
@@ -17,7 +18,6 @@ public partial class OpenTdbPanel : ContentPage
     string type = "";
     string selectedDifficulty = "";
     string sessionToken = "";
-    OpenTdbService _openTdbService;
     
     private class TypeOption
     {
@@ -25,7 +25,7 @@ public partial class OpenTdbPanel : ContentPage
         public string Value { get; set; }
     }
     
-    public OpenTdbPanel(OpenTdbService openTdbService)
+    public OpenTdbPanel()
     {
         InitializeComponent();
         DifficultyCollectionView.ItemsSource = Enum.GetNames(typeof(Difficulty));
@@ -35,7 +35,6 @@ public partial class OpenTdbPanel : ContentPage
             new TypeOption { Display = "Multiple choice", Value = "multiple" },
             new TypeOption { Display = "True or False", Value = "boolean" }
         };
-        _openTdbService = openTdbService;
         RequestWarning.Text = "Warning: You need to wait 5 seconds before making another request to the OpenTDB API. This is to prevent hitting the rate limit of the API. If you hit the rate limit, you will receive an error message.";
     }
    
@@ -128,7 +127,7 @@ public partial class OpenTdbPanel : ContentPage
             var questions = await OpenTdbFetcher.GetTriviaQuestionsAsync(
                 selectedNumber, selectedCategory.Id, selectedDifficulty, type, sessionToken
             );
-            _openTdbService.ImportApiQuestions(questions);
+            GlobalConfig.OpenTdbService.ImportApiQuestions(questions);
             await DisplayAlert("Success", $"{questions.Length} questions fetched successfully!", "OK");
 
         }

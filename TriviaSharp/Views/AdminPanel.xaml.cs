@@ -9,15 +9,13 @@ namespace TriviaSharp.Views;
 
 public partial class AdminPanel : ContentPage
 {
-    private readonly OpenTdbService _openTdbService;
-    public AdminPanel(OpenTdbService openTdbService)
+    public AdminPanel()
     {
         InitializeComponent();
-        _openTdbService = openTdbService;
     }
     
     private async void OnOpenTdbButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new OpenTdbPanel(_openTdbService));
+        await Navigation.PushAsync(new OpenTdbPanel());
     }
 }

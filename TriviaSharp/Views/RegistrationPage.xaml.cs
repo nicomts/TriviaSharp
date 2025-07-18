@@ -8,23 +8,21 @@ using TriviaSharp.Services;
 using TriviaSharp.Models;
 
 namespace TriviaSharp.Views;
+using TriviaSharp.Utils;
 
 public partial class RegistrationPage : ContentPage
 {
-    private UserRole _newUserRole;
-    private UserService _userService;
     
-    public RegistrationPage(UserService userService, User currentUser)
+    public RegistrationPage()
     {
         InitializeComponent();
 
-        _userService = userService;
-        if (currentUser == null)
+        if (GlobalConfig.CurrentUser == null)
         {
             AdminRoleCheckBox.IsEnabled = false;
             AdminRoleCheckBox.IsChecked = false; // Disable admin role selection for non-admin users
         }
-        else if (currentUser.Role == UserRole.Admin)
+        else if (GlobalConfig.CurrentUser.Role == UserRole.Admin)
         {
             AdminRoleCheckBox.IsEnabled = true;
         } 
@@ -101,15 +99,17 @@ public partial class RegistrationPage : ContentPage
         }
 
         // Registration logic here (e.g., call a UserService.RegisterAsync)
-        var registrationSucces = _userService.RegisterAsync(username, password, role);
-        if (!registrationSucces.Result)
+        var registrationSuccess = GlobalConfig.UserService.RegisterAsync(username, password, role);
+        if (!registrationSuccess.Result)
         {
             MessageLabel.Text = "Registration failed. User already exists.";
             return;
         }
         else
         {
-            SuccessLabel.Text = "Registration successful!";
+            // SuccessLabel.Text = "Registration successful!";
+            await DisplayAlert("Registration Successful", $"You can now log in with the {username} account.", "OK");
+            await Navigation.PopAsync();
         }
         
     }

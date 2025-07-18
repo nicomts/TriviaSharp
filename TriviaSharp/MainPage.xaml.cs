@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TriviaSharp.Data.Repositories;
 using TriviaSharp.Models.Enums;
 using TriviaSharp.Models;
+using TriviaSharp.Utils;
 
 //DEBUG CODE
 // using TriviaSharp.Services;
@@ -60,6 +61,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         
+        
         // Initialize in constructor
         dbContext = SetupDatabase();
         userRepo = new Data.Repositories.UserRepository(dbContext);
@@ -94,15 +96,15 @@ public partial class MainPage : ContentPage
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new LoginPage(userService));
+        await Navigation.PushAsync(new LoginPage());
     }
     private async void OnRegisterButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new RegistrationPage(userService, UserSessionService.Instance.CurrentUser));
+        await Navigation.PushAsync(new RegistrationPage());
     }
     private async void OnAdminPanelButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AdminPanel(openTdbService));
+        await Navigation.PushAsync(new AdminPanel());
     }
     
     

@@ -8,16 +8,15 @@ using TriviaSharp.Services;
 using Microsoft.EntityFrameworkCore;
 using TriviaSharp.Models;
 using TriviaSharp.Models.Enums;
+using TriviaSharp.Utils;
 
 namespace TriviaSharp.Views;
 
 public partial class LoginPage : ContentPage
 {
-    private UserService _userService;
-    public LoginPage(UserService userService)
+    public LoginPage()
     {
         InitializeComponent();
-        _userService = userService;
     }
     
     private void OnUsernameTextChanged(object sender, TextChangedEventArgs e)
@@ -37,11 +36,12 @@ public partial class LoginPage : ContentPage
     {
         var username = UsernameEntry.Text;
         var password = PasswordEntry.Text;
-        var loginResult = await _userService.LoginAsync(username, password);
+        var loginResult = await GlobalConfig.UserService.LoginAsync(username, password);
         switch (loginResult.Status) { 
             case LoginStatus.Success:
-                UserSessionService.Instance.CurrentUser = loginResult.User; // Set the current user
-                await DisplayAlert("Login Successful", $"Welcome, {UserSessionService.Instance.CurrentUser.Username}!", "OK");
+                // UserSessionService.Instance.CurrentUser = loginResult.User; // Set the current user
+                GlobalConfig.CurrentUser = loginResult.User;
+                await DisplayAlert("Login Successful", $"Welcome, {GlobalConfig.CurrentUser.Username}!", "OK");
                 await Navigation.PopAsync(); // Navigate back to the previous page
                 break;
             case LoginStatus.UserNotFound:
