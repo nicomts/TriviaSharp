@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TriviaSharp.Data.Repositories;
 using TriviaSharp.OpenTDB;
 using TriviaSharp.Models;
+using TriviaSharp.Models.Enums;
 
 public class OpenTdbService
 {
@@ -46,7 +47,7 @@ public class OpenTdbService
                 await _categoryRepo.AddAsync(category);
             }
 
-            _categoryRepo.SaveChangesAsync();
+            await _categoryRepo.SaveChangesAsync();
         }
     }
 
@@ -68,48 +69,88 @@ public class OpenTdbService
                 ?? new Category { Name = apiQ.Category };
             if (category.Id == 0)
                 await _categoryRepo.AddAsync(category);
+            
+           
+            
 
-            // Map API question to local Question model
-            var question = new Question
-            {
-                Text = apiQ.QuestionText,
-                Category = category,
-                QuestionSet = questionSet
-            };
+            
             
             // Ensure question does not already exist
-            var existingQuestion = await _questionRepo.GetByTextAsync(question.Text);
-            if (existingQuestion == null)
+            // var existingQuestion = (await _questionRepo.GetByTextAsync(question.Text)).FirstOrDefault();
+            Question existingQuestion = null;
+            var existingQuestionQuery = await _questionRepo.GetByTextCategoryAndDifficultyAsync(
+                apiQ.QuestionText,
+                category,
+                apiQ.Difficulty,
+                questionSet);
+            existingQuestion = existingQuestionQuery.FirstOrDefault();
+            // DEBUG CODE
+            // Console.WriteLine($"Checking question: {apiQ.QuestionText} in category: {category.Name} with difficulty: {apiQ.Difficulty}");
+            // Console.WriteLine($"Existing question data: {existingQuestion?.Text ?? "None"}");
+            
+            if (existingQuestion != null)
             {
-                // Add question to the repository
-                await _questionRepo.AddAsync(question);
+                continue; // Skip to the next apiQ if question already exists
             }
-            
-            
-
-            // Map API answers to local Answer model
-            var correctAnswer = new Answer
+            else
             {
-                Text = apiQ.CorrectAnswer,
-                IsCorrect = true,
-                Question = question
-            };
-            await _answerRepo.AddAsync(correctAnswer);
-
-            foreach (var incorrectText in apiQ.IncorrectAnswers)
-            {
-                var incorrectAnswer = new Answer
+                // Map API question to local Question model
+                var question = new Question
                 {
-                    Text = incorrectText,
-                    IsCorrect = false,
+                    Text = apiQ.QuestionText,
+                    Difficulty = apiQ.Difficulty,
+                    Category = category,
+                    QuestionSet = questionSet
+                };
+
+                // Map API answers to local Answer model
+                var correctAnswer = new Answer
+                {
+                    Text = apiQ.CorrectAnswer,
+                    IsCorrect = true,
                     Question = question
                 };
-                await _answerRepo.AddAsync(incorrectAnswer);
+                await _answerRepo.AddAsync(correctAnswer);
+                await _answerRepo.SaveChangesAsync();
+
+
+                foreach (var incorrectText in apiQ.IncorrectAnswers)
+                {
+                    var incorrectAnswer = new Answer
+                    {
+                        Text = incorrectText,
+                        IsCorrect = false,
+                        Question = question
+                    };
+                    await _answerRepo.AddAsync(incorrectAnswer);
+                    await _answerRepo.SaveChangesAsync();
+
                 
+                }
+                // Save changes after processing each question
+                await _questionRepo.SaveChangesAsync();
+                await _answerRepo.SaveChangesAsync();
             }
-            // Save changes after processing each question
-            await _questionRepo.SaveChangesAsync();
-            await _answerRepo.SaveChangesAsync();
+            
+            
+            
+            
+            
+            
+            
+            
+            // if (existingQuestion == null)
+            // {
+            //     // Add question to the repository
+            //     await _questionRepo.AddAsync(question);
+            //     await _questionRepo.SaveChangesAsync();
+            // }
+            // else
+            // {
+            //     continue; // Skip to the next apiQ
+            // }
+            //
+            
             
         }
     }

@@ -28,8 +28,7 @@ public partial class OpenTdbPanel : ContentPage
     public OpenTdbPanel()
     {
         InitializeComponent();
-        DifficultyCollectionView.ItemsSource = Enum.GetNames(typeof(Difficulty));
-        DifficultyCollectionView.ItemsSource = Enum.GetNames(typeof(Difficulty));
+        DifficultyCollectionView.ItemsSource = new[] { "Easy", "Medium", "Hard" };
         TypeCollectionView.ItemsSource = new List<TypeOption>
         {
             new TypeOption { Display = "Multiple choice", Value = "multiple" },
@@ -85,21 +84,11 @@ public partial class OpenTdbPanel : ContentPage
     
     private void OnDifficultySelected(object sender, SelectionChangedEventArgs e)
     {
-        switch (DifficultyCollectionView.SelectedItem)
-        {
-            case "Easy":
-                selectedDifficulty = "easy";
-                break;
-            case "Medium":
-                selectedDifficulty = "medium";
-                break;
-            case "Hard":
-                selectedDifficulty = "hard";
-                break;
-            default:
-                selectedDifficulty = "";
-                break;
-        }
+        selectedDifficulty = DifficultyCollectionView.SelectedItem as string;
+        selectedDifficulty = selectedDifficulty.ToLower();
+        // DEBUG CODE
+        // Console.WriteLine($"Selected Difficulty: {selectedDifficulty}");
+        
         
     }
     private void OnTypeSelected(object sender, SelectionChangedEventArgs e)
@@ -125,7 +114,12 @@ public partial class OpenTdbPanel : ContentPage
         try
         {
             var questions = await OpenTdbFetcher.GetTriviaQuestionsAsync(
-                selectedNumber, selectedCategory.Id, selectedDifficulty, type, sessionToken
+                amount: selectedNumber,
+                category: selectedCategory.Id,
+                difficulty: selectedDifficulty,
+                type: type,
+                sessionToken: sessionToken
+                // selectedNumber, selectedCategory.Id, selectedDifficulty, type, sessionToken
             );
             GlobalConfig.OpenTdbService.ImportApiQuestions(questions);
             await DisplayAlert("Success", $"{questions.Length} questions fetched successfully!", "OK");

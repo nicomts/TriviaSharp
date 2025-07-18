@@ -7,7 +7,7 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
 {
     public QuestionRepository(TriviaDbContext context) : base(context) { }
 
-    public async Task<IEnumerable<Question>> GetByCategoryAndDifficultyAsync(Category category, Difficulty difficulty, QuestionSet set)
+    public async Task<IEnumerable<Question>> GetByCategoryAndDifficultyAsync(Category category, string difficulty, QuestionSet set)
     {
         return await _context.Questions
             .Where(q => q.Category == category && q.Difficulty == difficulty && q.QuestionSetId == set.Id)
@@ -19,6 +19,14 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
     {
         return await _context.Questions
             .Where(q => q.Text.Contains(text))
+            .Include(q => q.Answers)
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Question>> GetByTextCategoryAndDifficultyAsync(string text, Category category, string difficulty, QuestionSet set)
+    {
+        return await _context.Questions
+            .Where(q => q.Text.Contains(text) && q.Category == category && q.Difficulty == difficulty && q.QuestionSetId == set.Id)
             .Include(q => q.Answers)
             .ToListAsync();
     }
