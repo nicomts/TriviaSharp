@@ -150,7 +150,7 @@ public class OpenTdbFetcher
         string apiUrl = uriBuilder.ToString();
         
         // DEBUG CODE
-        Console.WriteLine($"Fetching trivia questions from API: {apiUrl}");
+        // Console.WriteLine($"Fetching trivia questions from API: {apiUrl}");
 
         try
         {

@@ -29,10 +29,13 @@ public static class GlobalConfig
     public static User? CurrentUser = null;
     public static QuestionSet CurrentQuestionSet = SetupQuestionSet();
 
-    
-    
-    
-    
+
+
+    // Methods
+    static GlobalConfig()
+    {
+        EnsureAdminUser();
+    }
     public static TriviaDbContext SetupDatabase()
     {
         // Locate database file at ~/.config/TriviaSharp/triviasharp.db
@@ -55,6 +58,16 @@ public static class GlobalConfig
         // Ensure database and tables are created
         context.Database.EnsureCreated();
         return context;
+    }
+    
+    public static void EnsureAdminUser()
+    {
+        // Check if any user with Admin role exists
+        var admins = UserRepo.FindAsync(u => u.Role == Models.Enums.UserRole.Admin).Result;
+        if (!admins.Any())
+        {
+            UserService.RegisterAsync("admin", "triviasharp", Models.Enums.UserRole.Admin);
+        }
     }
     
     // Method to setup a default QuestionSet. It retrieves the question set with the name "OpenTDB" from the database or creates a new one if it doesn't exist.
