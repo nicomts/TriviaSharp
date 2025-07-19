@@ -48,6 +48,10 @@
                 Text="New Quiz"
                 Clicked="OnNewQuizButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="Rankings"
+                Clicked="OnRankingsButtonClicked"
+                HorizontalOptions="Fill" />
             
             
         </VerticalStackLayout>

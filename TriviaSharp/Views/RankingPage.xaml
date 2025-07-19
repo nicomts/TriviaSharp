@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TriviaSharp.Views.RankingPage"
+             Title="Top 20 Rankings">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout>
+                <!-- Header Row -->
+                <Grid Padding="10" ColumnDefinitions="2*,1*,1*,2*">
+                    <Label Text="Username" FontAttributes="Bold" Grid.Column="0" HorizontalOptions="Start"/>
+                    <Label Text="Score" FontAttributes="Bold" Grid.Column="1" HorizontalOptions="Center"/>
+                    <Label Text="Time" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Center"/>
+                    <Label Text="Date" FontAttributes="Bold" Grid.Column="3" HorizontalOptions="End"/>
+                </Grid>
+                <!-- Rankings List -->
+                <CollectionView x:Name="RankingList" ItemsSource="{Binding QuizSessions}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10" ColumnDefinitions="2*,1*,1*,2*">
+                                <Label Text="{Binding User.Username}" Grid.Column="0" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Score}" Grid.Column="1" HorizontalOptions="Center"/>
+                                <Label Text="{Binding TimeTakenSeconds, StringFormat='{0:F1} s'}" Grid.Column="2" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Date, StringFormat='{0:yyyy-MM-dd HH:mm}'}" Grid.Column="3" HorizontalOptions="End"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
