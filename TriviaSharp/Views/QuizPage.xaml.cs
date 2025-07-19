@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using TriviaSharp.Models;
+using TriviaSharp.Services;
 
 namespace TriviaSharp.Views;
 
@@ -16,11 +17,16 @@ public partial class QuizPage : ContentPage
     private DateTime _startDate;
     private System.Timers.Timer _timer;
     private double _elapsedSeconds = 0;
+    private string _difficulty;
+    private QuizService _quizService;
+    private int _score = 0;
 
-    public QuizPage(List<Question> questions)
+    public QuizPage(List<Question> questions, string difficulty)
     {
         InitializeComponent();
         _questions = questions;
+        _difficulty = difficulty;
+        _quizService = new QuizService();
         _startDate = DateTime.UtcNow;
         StartTimer();
         ShowQuestion();
@@ -49,6 +55,11 @@ public partial class QuizPage : ContentPage
             TimerLabel.Text = $"Finished! Time: {_elapsedSeconds:F1} s";
             QuestionLabel.Text = "Quiz Complete!";
             AnswersLayout.Children.Clear();
+            _score = _quizService.CalculateScore(_questions.Count, _correctCount, _difficulty, _elapsedSeconds);
+            //DEBUG CODE
+            Console.WriteLine($"Quiz completed with score: {_score}");
+            // print on console _quetions.Count, _correctCount, _difficulty, _elapsedSeconds
+            Console.WriteLine($"Total Questions: {_questions.Count}, Correct Answers: {_correctCount}, Difficulty: {_difficulty}, Time Taken: {_elapsedSeconds:F1} seconds");
             return;
         }
 

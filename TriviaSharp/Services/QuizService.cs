@@ -5,7 +5,7 @@ using TriviaSharp.Models;
 
 public class QuizService
 {
-    // This service controls the quiz logic, including starting a quiz, answering questions, and calculating scores.
+    // This service controls the quiz logic, including starting a quiz, and calculating scores.
     
     
     public async Task<List<Question>> GetQuizAsync(Category category, string difficulty, int numberOfQuestions, QuestionSet questionSet)
@@ -60,5 +60,22 @@ public class QuizService
         return randomQuestions;
         
     }
+
+    public int CalculateScore(int totalQuestions, int correctAnswers, string difficulty, double time)
+    {
+        int difficultyMultiplier = difficulty switch
+        {
+            "easy" => 1,
+            "medium" => 3,
+            "hard" => 5,
+            _ => 1
+        };
+        double quotient = time / totalQuestions;
+        int timeMultiplier = quotient < 5 ? 5 : quotient < 20 ? 3 : 1;
+
+        double baseScore = ((double)correctAnswers / totalQuestions) * difficultyMultiplier * timeMultiplier;
+        return (int)Math.Round(baseScore * 100); // Multiply by 100 for a more meaningful score
+    }
+    
     
 }

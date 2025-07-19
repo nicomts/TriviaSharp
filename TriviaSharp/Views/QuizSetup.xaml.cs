@@ -74,17 +74,18 @@ public partial class QuizSetup : ContentPage
             return;
         }
         
+        // DEBUG CODE
         // For each question in randomQuestions, console log the question text and answers. Also log the correct answer.
-        foreach (var question in randomQuestions)
-        {
-            Console.WriteLine($"Question: {question.Text}");
-            foreach (var answer in question.Answers)
-            {
-                Console.WriteLine($"Answer: {answer.Text} (Correct: {answer.IsCorrect})");
-            }
-        }
-        
-        await Navigation.PushAsync(new QuizPage(randomQuestions));
+        // foreach (var question in randomQuestions)
+        // {
+        //     Console.WriteLine($"Question: {question.Text}");
+        //     foreach (var answer in question.Answers)
+        //     {
+        //         Console.WriteLine($"Answer: {answer.Text} (Correct: {answer.IsCorrect})");
+        //     }
+        // }
+        //
+        await Navigation.PushAsync(new QuizPage(randomQuestions, selectedDifficulty));
         
         
         
