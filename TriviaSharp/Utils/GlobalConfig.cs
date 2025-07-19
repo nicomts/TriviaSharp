@@ -14,6 +14,7 @@ public static class GlobalConfig
     public static QuestionSetRepository QuestionSetRepo = new QuestionSetRepository(DbContext);
     public static AnswerRepository AnswerRepo = new AnswerRepository(DbContext);
     public static CategoryRepository CategoryRepo = new CategoryRepository(DbContext);
+    public static QuizSessionRepository QuizSessionRepo = new QuizSessionRepository(DbContext);
     
     // Services
     public static UserService UserService = new UserService(UserRepo);

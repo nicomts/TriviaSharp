@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using TriviaSharp.Models;
 using TriviaSharp.Services;
+using TriviaSharp.Utils;
 
 namespace TriviaSharp.Views;
 
@@ -20,6 +21,7 @@ public partial class QuizPage : ContentPage
     private string _difficulty;
     private QuizService _quizService;
     private int _score = 0;
+    // private QuizSession _quizSession = null;
 
     public QuizPage(List<Question> questions, string difficulty)
     {
@@ -56,10 +58,20 @@ public partial class QuizPage : ContentPage
             QuestionLabel.Text = "Quiz Complete!";
             AnswersLayout.Children.Clear();
             _score = _quizService.CalculateScore(_questions.Count, _correctCount, _difficulty, _elapsedSeconds);
-            //DEBUG CODE
-            Console.WriteLine($"Quiz completed with score: {_score}");
-            // print on console _quetions.Count, _correctCount, _difficulty, _elapsedSeconds
-            Console.WriteLine($"Total Questions: {_questions.Count}, Correct Answers: {_correctCount}, Difficulty: {_difficulty}, Time Taken: {_elapsedSeconds:F1} seconds");
+            ScoreLabel.Text = $"Score: {_score}";
+            QuizSession quizSession = new QuizSession
+            {
+                Date = _startDate,
+                Score = _score,
+                TimeTakenSeconds = _elapsedSeconds,
+                User = GlobalConfig.CurrentUser
+            };
+            GlobalConfig.QuizSessionRepo.AddAsync(quizSession);
+            GlobalConfig.QuizSessionRepo.SaveChangesAsync();
+            // //DEBUG CODE
+            // Console.WriteLine($"Quiz completed with score: {_score}");
+            // // print on console _quetions.Count, _correctCount, _difficulty, _elapsedSeconds
+            // Console.WriteLine($"Total Questions: {_questions.Count}, Correct Answers: {_correctCount}, Difficulty: {_difficulty}, Time Taken: {_elapsedSeconds:F1} seconds");
             return;
         }
 

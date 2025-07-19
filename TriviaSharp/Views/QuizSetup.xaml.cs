@@ -21,7 +21,17 @@ public partial class QuizSetup : ContentPage
     public QuizSetup()
     {
         InitializeComponent();
+        RequireUserLogin();
         DifficultyCollectionView.ItemsSource = new[] { "Easy", "Medium", "Hard" };
+    }
+    
+    private async void RequireUserLogin()
+    {
+        if (GlobalConfig.CurrentUser == null)
+        {
+            await DisplayAlert("Login Required", "You must be logged in to access this feature.", "OK");
+            Navigation.PopAsync();
+        }
     }
     
     private async void OnCategoriesButtonClicked(object sender, EventArgs e)
