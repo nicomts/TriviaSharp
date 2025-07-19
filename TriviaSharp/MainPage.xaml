@@ -44,6 +44,10 @@
                 Text="Admin Panel"
                 Clicked="OnAdminPanelButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="New Quiz"
+                Clicked="OnNewQuizButtonClicked"
+                HorizontalOptions="Fill" />
             
             
         </VerticalStackLayout>

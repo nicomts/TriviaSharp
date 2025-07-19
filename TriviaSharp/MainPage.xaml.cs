@@ -51,5 +51,9 @@ public partial class MainPage : ContentPage
         await Navigation.PushAsync(new AdminPanel());
     }
     
+    private async void OnNewQuizButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new QuizSetup());
+    }
     
 }

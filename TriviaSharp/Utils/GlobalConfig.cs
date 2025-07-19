@@ -26,7 +26,7 @@ public static class GlobalConfig
     
     // Session management
     public static User? CurrentUser = null;
-    
+    public static QuestionSet CurrentQuestionSet = SetupQuestionSet();
 
     
     
@@ -54,6 +54,22 @@ public static class GlobalConfig
         // Ensure database and tables are created
         context.Database.EnsureCreated();
         return context;
+    }
+    
+    // Method to setup a default QuestionSet. It retrieves the question set with the name "OpenTDB" from the database or creates a new one if it doesn't exist.
+    public static QuestionSet SetupQuestionSet()
+    {
+        var questionSet = QuestionSetRepo.GetByNameAsync("OpenTDB").Result;
+        if (questionSet == null)
+        {
+            questionSet = new QuestionSet
+            {
+                Name = "OpenTDB",
+            };
+            QuestionSetRepo.AddAsync(questionSet);
+            QuestionSetRepo.SaveChangesAsync();
+        }
+        return questionSet;
     }
     
 }
