@@ -84,6 +84,8 @@ public partial class QuizSetup : ContentPage
             }
         }
         
+        await Navigation.PushAsync(new QuizPage(randomQuestions));
+        
         
         
     }
