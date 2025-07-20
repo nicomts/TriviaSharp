@@ -69,5 +69,14 @@ public partial class MainPage : ContentPage
         // }
         await Navigation.PushAsync(new ChangePasswordPage());
     }
+    private async void OnDeleteUserButtonClicked(object sender, EventArgs e)
+    {
+        // if (GlobalConfig.CurrentUser == null || GlobalConfig.CurrentUser.Role != UserRole.Admin)
+        // {
+        //     await DisplayAlert("Admin Required", "You must be an admin to delete users.", "OK");
+        //     return;
+        // }
+        await Navigation.PushAsync(new DeleteUserPage());
+    }
     
 }

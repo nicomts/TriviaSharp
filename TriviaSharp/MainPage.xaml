@@ -56,6 +56,10 @@
                 Text="Change Password"
                 Clicked="OnChangePasswordButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="Delete User"
+                Clicked="OnDeleteUserButtonClicked"
+                HorizontalOptions="Fill"/>
             
             
         </VerticalStackLayout>
