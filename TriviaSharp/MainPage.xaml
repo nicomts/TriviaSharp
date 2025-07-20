@@ -52,6 +52,10 @@
                 Text="Rankings"
                 Clicked="OnRankingsButtonClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                Text="Change Password"
+                Clicked="OnChangePasswordButtonClicked"
+                HorizontalOptions="Fill" />
             
             
         </VerticalStackLayout>

@@ -10,4 +10,9 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
+    public async Task Update(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
 }

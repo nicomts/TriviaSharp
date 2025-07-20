@@ -71,4 +71,25 @@ public class UserService
         }; // Login successful
         
     }
+    
+    public async Task<ChangePasswordStatus> ChangePasswordAsync(string username, string oldPassword, string newPassword)
+    {
+        var user = await _userRepository.GetByUsernameAsync(username);
+        if (user == null)
+        {
+            return ChangePasswordStatus.UserNotFound; // User not found
+        }
+        
+        bool isOldPasswordCorrect = BCrypt.Verify(oldPassword, user.PasswordHash);
+        if (!isOldPasswordCorrect)
+        {
+            return ChangePasswordStatus.IncorrectPassword; // Incorrect old password
+        }
+        
+        user.PasswordHash = BCrypt.HashPassword(newPassword);
+        _userRepository.Update(user);
+        await _userRepository.SaveChangesAsync();
+        
+        return ChangePasswordStatus.Success; // Password changed successfully
+    }
 }

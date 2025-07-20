@@ -60,5 +60,14 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new RankingPage());
     }
+    private async void OnChangePasswordButtonClicked(object sender, EventArgs e)
+    {
+        // if (GlobalConfig.CurrentUser == null)
+        // {
+        //     await DisplayAlert("Login Required", "You must be logged in to change your password.", "OK");
+        //     return;
+        // }
+        await Navigation.PushAsync(new ChangePasswordPage());
+    }
     
 }
