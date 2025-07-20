@@ -2,7 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TriviaSharp.Views.AdminPanel">
+             x:Class="TriviaSharp.Views.SettingsPage">
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout
@@ -10,9 +10,19 @@
                 Spacing="25">
                 
                 <Button
+                    Text="Change Password"
+                    Clicked="OnChangePasswordButtonClicked"
+                    HorizontalOptions="Fill" />
+                
+                <Button
                     Text="Import OpenTDB Questions"
                     Clicked="OnOpenTdbButtonClicked"
                     HorizontalOptions="Fill" /> 
+                
+                <Button
+                    Text="Delete User"
+                    Clicked="OnDeleteUserButtonClicked"
+                    HorizontalOptions="Fill"/>
             
             </VerticalStackLayout>
         </ScrollView>

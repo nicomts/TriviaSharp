@@ -15,27 +15,10 @@ namespace TriviaSharp;
 public partial class MainPage : ContentPage
 {
     
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
         
-    }
-
-  
-    
-    
-    private void OnCounterClicked(object? sender, EventArgs e)
-    {
-        count++;
-
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
-
-        SemanticScreenReader.Announce(CounterBtn.Text);
     }
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
@@ -46,9 +29,9 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new RegistrationPage());
     }
-    private async void OnAdminPanelButtonClicked(object sender, EventArgs e)
+    private async void OnSettingsPageButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AdminPanel());
+        await Navigation.PushAsync(new SettingsPage());
     }
     
     private async void OnNewQuizButtonClicked(object sender, EventArgs e)
@@ -60,23 +43,6 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new RankingPage());
     }
-    private async void OnChangePasswordButtonClicked(object sender, EventArgs e)
-    {
-        // if (GlobalConfig.CurrentUser == null)
-        // {
-        //     await DisplayAlert("Login Required", "You must be logged in to change your password.", "OK");
-        //     return;
-        // }
-        await Navigation.PushAsync(new ChangePasswordPage());
-    }
-    private async void OnDeleteUserButtonClicked(object sender, EventArgs e)
-    {
-        // if (GlobalConfig.CurrentUser == null || GlobalConfig.CurrentUser.Role != UserRole.Admin)
-        // {
-        //     await DisplayAlert("Admin Required", "You must be an admin to delete users.", "OK");
-        //     return;
-        // }
-        await Navigation.PushAsync(new DeleteUserPage());
-    }
+
     
 }

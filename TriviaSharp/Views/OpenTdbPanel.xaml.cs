@@ -36,6 +36,20 @@ public partial class OpenTdbPanel : ContentPage
         };
         RequestWarning.Text = "Warning: You need to wait 5 seconds before making another request to the OpenTDB API. This is to prevent hitting the rate limit of the API. If you hit the rate limit, you will receive an error message.";
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        // Check if current user is admin
+        if (GlobalConfig.CurrentUser == null || GlobalConfig.CurrentUser.Role != UserRole.Admin)
+        {
+            await DisplayAlert("Admin Required", "You must be an admin user to access this page.", "OK");
+            if (Navigation.NavigationStack.Count > 1)
+                await Navigation.PopAsync();
+            else
+                await Navigation.PopModalAsync();
+        }
+    }
    
     private async void OnSessionTokenButtonClicked(object sender, EventArgs e)
     {
