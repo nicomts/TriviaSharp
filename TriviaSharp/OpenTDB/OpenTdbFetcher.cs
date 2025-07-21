@@ -1,3 +1,5 @@
+using TriviaSharp.Utils;
+
 namespace TriviaSharp.OpenTDB;
 
 using System.Web;
@@ -17,6 +19,7 @@ public class OpenTdbFetcher
     /// <exception cref="Exception">Thrown if there's an error fetching the token.</exception>
     public static async Task<string> GetSessionTokenAsync()
     {
+        GlobalConfig.Logger.Information("OpenTdbFetcher: Attempting to fetch session token from OpenTDB API");
         try
         {
             var response = await _httpClient.GetStringAsync($"{TokenApiUrl}?command=request");
@@ -30,25 +33,30 @@ public class OpenTdbFetcher
 
                     if (responseCode == 0)
                     {
+                        GlobalConfig.Logger.Information($"OpenTdbFetcher: Session token retrieved. Token: {token}");
                         return token;
                     }
                     else
                     {
+                        GlobalConfig.Logger.Error($"Error getting session token. Response Code: {responseCode}");
                         throw new Exception($"Error getting session token. Response Code: {responseCode}");
                     }
                 }
                 else
                 {
+                    GlobalConfig.Logger.Error("Invalid response format when fetching session token.");
                     throw new Exception("Invalid response format when fetching session token.");
                 }
             }
         }
         catch (HttpRequestException ex)
         {
+            GlobalConfig.Logger.Error($"Network error fetching session token: {ex.Message}");
             throw new Exception($"Network error fetching session token: {ex.Message}", ex);
         }
         catch (JsonException ex)
         {
+            GlobalConfig.Logger.Error($"JSON parsing error fetching session token: {ex.Message}");
             throw new Exception($"JSON parsing error fetching session token: {ex.Message}", ex);
         }
     }
@@ -60,6 +68,7 @@ public class OpenTdbFetcher
     /// <exception cref="Exception">Thrown if there's an error fetching or deserializing the data.</exception>
     public static async Task<ApiCategory[]> GetTriviaCategoriesAsync()
     {
+        GlobalConfig.Logger.Information("OpenTdbFetcher: Attempting to fetch trivia categories from OpenTDB API");
         try
         {
             HttpResponseMessage response = await _httpClient.GetAsync(CategoriesApiUrl);
@@ -78,19 +87,23 @@ public class OpenTdbFetcher
                 throw new Exception("Failed to deserialize categories or no categories found in the response.");
             }
 
+            GlobalConfig.Logger.Information("OpenTdbFetcher: Trivia categories retrieved");
             return apiResponse.TriviaCategories;
         }
         catch (HttpRequestException ex)
         {
+            GlobalConfig.Logger.Error($"Error fetching categories: {ex.Message}");
             throw new Exception($"Network error fetching categories: {ex.Message}", ex);
         }
         catch (JsonException ex)
         {
+            GlobalConfig.Logger.Error($"Error fetching categories: {ex.Message}");
             throw new Exception($"Error deserializing JSON categories: {ex.Message}", ex);
         }
         catch (Exception ex)
         {
             // Re-throw any other exceptions
+            GlobalConfig.Logger.Error($"Error fetching categories: {ex.Message}");
             throw new Exception($"An unexpected error occurred while fetching categories: {ex.Message}", ex);
         }
     }
@@ -120,6 +133,7 @@ public class OpenTdbFetcher
             throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be between 1 and 50.");
         }
 
+        GlobalConfig.Logger.Information($"OpenTdbFetcher: Fetching {amount} trivia questions with category: {category}, difficulty: {difficulty}, type: {type}, sessionToken: {sessionToken}, encoding: {encoding}");
         var uriBuilder = new UriBuilder(BaseApiUrl);
         var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
@@ -148,9 +162,8 @@ public class OpenTdbFetcher
 
         uriBuilder.Query = query.ToString();
         string apiUrl = uriBuilder.ToString();
-        
-        // DEBUG CODE
-        // Console.WriteLine($"Fetching trivia questions from API: {apiUrl}");
+        GlobalConfig.Logger.Information($"OpenTdbFetcher: Constructed API URL: {apiUrl}");
+
 
         try
         {
@@ -168,10 +181,12 @@ public class OpenTdbFetcher
             {
                 throw new Exception("Failed to deserialize API response.");
             }
+            GlobalConfig.Logger.Information($"OpenTdbFetcher: API response received with code: {apiResponse.ResponseCode}");
 
             switch (apiResponse.ResponseCode)
             {
                 case 0: // Success
+                    GlobalConfig.Logger.Information("OpenTdbFetcher: Questions retrieved successfully");
                     return apiResponse.ApiQuestions.ToArray();
                 case 1: // No Results
                     throw new Exception("No questions could be returned for the specified query (Code 1).");
@@ -189,14 +204,17 @@ public class OpenTdbFetcher
         }
         catch (HttpRequestException ex)
         {
+            GlobalConfig.Logger.Error($"Error fetching questions: {ex.Message}");
             throw new Exception($"Network error or non-success HTTP status: {ex.Message}", ex);
         }
         catch (JsonException ex)
         {
+            GlobalConfig.Logger.Error($"Error fetching questions: {ex.Message}");
             throw new Exception($"Error deserializing JSON response: {ex.Message}", ex);
         }
         catch (Exception ex)
         {
+            GlobalConfig.Logger.Error($"Error fetching questions: {ex.Message}");
             throw ex; // Re-throw specific API exceptions
         }
     }
