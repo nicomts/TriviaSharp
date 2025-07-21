@@ -18,7 +18,7 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
-        
+        GlobalConfig.Logger.Information("Application initialized");
     }
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)

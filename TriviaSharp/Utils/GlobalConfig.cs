@@ -4,9 +4,14 @@ namespace TriviaSharp.Utils;
 using Microsoft.EntityFrameworkCore;
 using TriviaSharp.Data.Repositories;
 using TriviaSharp.Models;
+using Serilog;
+using Serilog.Events;
 
 public static class GlobalConfig
 {
+    // Logger initialization
+    public static ILogger Logger = SetupLogger(); 
+    
     // Database initialization and repositories
     public static TriviaDbContext DbContext = SetupDatabase();
     public static UserRepository UserRepo = new UserRepository(DbContext);
@@ -36,6 +41,35 @@ public static class GlobalConfig
     {
         EnsureAdminUser();
     }
+    
+    public static ILogger SetupLogger()
+    {
+        var logFilePath = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".config",
+            "TriviaSharp",
+            "logs",
+            "triviasharp-.log"
+        );
+        return new LoggerConfiguration()
+            .MinimumLevel.Debug() // Set the minimum level for all logs
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information) // Suppress verbose Microsoft logs
+            .MinimumLevel.Override("System", LogEventLevel.Information)    // Suppress verbose System logs
+            // If you are using SQLite/EF Core, you might want to override their log levels:
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.Data.Sqlite", LogEventLevel.Information)
+            .Enrich.FromLogContext() // Enables structured logging context
+            .WriteTo.File(
+                path: logFilePath,
+                rollingInterval: RollingInterval.Day, // Create a new log file daily
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+                fileSizeLimitBytes: 10 * 1024 * 1024, // 10 MB file size limit
+                rollOnFileSizeLimit: true, // Roll to a new file when size limit is reached
+                shared: true // Allow multiple processes to write to the same log file
+            )
+            .CreateLogger();
+    }
+    
     public static TriviaDbContext SetupDatabase()
     {
         // Locate database file at ~/.config/TriviaSharp/triviasharp.db
