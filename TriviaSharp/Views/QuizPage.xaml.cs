@@ -30,6 +30,7 @@ public partial class QuizPage : ContentPage
         _difficulty = difficulty;
         _quizService = new QuizService();
         _startDate = DateTime.UtcNow;
+        GlobalConfig.Logger.Information($"QuizPage: Starting quiz with {_questions.Count} questions at difficulty '{_difficulty}'");
         StartTimer();
         ShowQuestion();
     }
@@ -59,6 +60,7 @@ public partial class QuizPage : ContentPage
             AnswersLayout.Children.Clear();
             _score = _quizService.CalculateScore(_questions.Count, _correctCount, _difficulty, _elapsedSeconds);
             ScoreLabel.Text = $"Score: {_score}";
+            GlobalConfig.Logger.Information($"QuizPage: Quiz completed with score {_score} at difficulty '{_difficulty}'");
             QuizSession quizSession = new QuizSession
             {
                 Date = _startDate,
@@ -68,10 +70,7 @@ public partial class QuizPage : ContentPage
             };
             GlobalConfig.QuizSessionRepo.AddAsync(quizSession);
             GlobalConfig.QuizSessionRepo.SaveChangesAsync();
-            // //DEBUG CODE
-            // Console.WriteLine($"Quiz completed with score: {_score}");
-            // // print on console _quetions.Count, _correctCount, _difficulty, _elapsedSeconds
-            // Console.WriteLine($"Total Questions: {_questions.Count}, Correct Answers: {_correctCount}, Difficulty: {_difficulty}, Time Taken: {_elapsedSeconds:F1} seconds");
+            GlobalConfig.Logger.Information($"QuizPage: Quiz session created with ID {quizSession.Id} for user {GlobalConfig.CurrentUser?.Username ?? "unknown user"}");
             return;
         }
 

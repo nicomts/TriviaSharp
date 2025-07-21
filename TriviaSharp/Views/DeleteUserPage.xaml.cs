@@ -59,6 +59,7 @@ public partial class DeleteUserPage : ContentPage
 
         await GlobalConfig.UserRepo.DeleteAsync(user);
         await GlobalConfig.UserRepo.SaveChangesAsync();
+        GlobalConfig.Logger.Information($"User '{username}' has been deleted by {GlobalConfig.CurrentUser?.Username ?? "unknown user"}.");
 
         await DisplayAlert("Success", $"User '{username}' has been deleted.", "OK");
         await Navigation.PopAsync();
