@@ -7,37 +7,22 @@ public class QuizService
 {
     // This service controls the quiz logic, including starting a quiz, and calculating scores.
     
-    
+    /// <summary>
+    /// Gets a random set of questions for a quiz based on the specified category, difficulty, and number of questions.
+    /// </summary>
+    /// <param name="category">Selected category.</param>
+    /// <param name="difficulty">Selected difficulty.</param>
+    /// <param name="numberOfQuestions">Total number of questions.</param>
+    /// <param name="questionSet">Question Set.</param>
+    /// <returns>A list of random questions.</returns>
     public async Task<List<Question>> GetQuizAsync(Category category, string difficulty, int numberOfQuestions, QuestionSet questionSet)
     {
+        GlobalConfig.Logger.Information($"QuizService: Attempting to get {numberOfQuestions} random questions for category: {category.Name}, difficulty: {difficulty}, question set: {questionSet.Name}");
         // Get random questions from the repository based on category, difficulty, amount and question set
         var randomQuestions = (await GlobalConfig.QuestionRepo.GetByCategoryAndDifficultyAsync(category, difficulty, questionSet))
             .OrderBy(q => Guid.NewGuid()).Take(numberOfQuestions).ToList();
         
-        // DEBUG CODE
-        // if (randomQuestions == null)
-        // {
-        //     Console.WriteLine("No questions found for the specified criteria.");
-        // }
-        //
-        // Console.WriteLine($"Total Questions: {randomQuestions.Count}");
-        // foreach (var question in randomQuestions)
-        // {
-        //     
-        //     Console.WriteLine($"Question: {question.Text}");
-        //     foreach (var answer in question.Answers)
-        //     {
-        //         Console.WriteLine($"Answer: {answer.Text} (Correct: {answer.IsCorrect})");
-        //     }
-        // }
-        //
-        
-        
-        // For each question in randomQuestions, random sort answers
-        // foreach (var question in randomQuestions)
-        // {
-        //     question.Answers = question.Answers.OrderBy(a => Guid.NewGuid()).ToList();
-        // }
+
         
         // For each question in randomQuestions, if one of the answers is "True" or "False", order the answers so that "True" is always first and "False" is always second. Else, random sort answers
         foreach (var question in randomQuestions)
@@ -57,12 +42,22 @@ public class QuizService
         
         
         // Return the random questions
+        GlobalConfig.Logger.Information($"QuizService: Retrieved {randomQuestions.Count} questions");
         return randomQuestions;
         
     }
 
+    /// <summary>
+    /// Calculates the score based on the total number of questions, correct answers, difficulty level, and time taken.
+    /// </summary>
+    /// <param name="totalQuestions"></param>
+    /// <param name="correctAnswers"></param>
+    /// <param name="difficulty"></param>
+    /// <param name="time"></param>
+    /// <returns>An integer with the score</returns>
     public int CalculateScore(int totalQuestions, int correctAnswers, string difficulty, double time)
     {
+        GlobalConfig.Logger.Information($"QuizService: Calculating score for {totalQuestions} questions");
         int difficultyMultiplier = difficulty switch
         {
             "easy" => 1,
@@ -74,6 +69,7 @@ public class QuizService
         int timeMultiplier = quotient < 5 ? 5 : quotient < 20 ? 3 : 1;
 
         double baseScore = ((double)correctAnswers / totalQuestions) * difficultyMultiplier * timeMultiplier;
+        GlobalConfig.Logger.Information($"QuizService: Base score calculated: {baseScore} (correctAnswers: {correctAnswers}, totalQuestions: {totalQuestions}, difficultyMultiplier: {difficultyMultiplier}, timeMultiplier: {timeMultiplier})");
         return (int)Math.Round(baseScore * 100); // Multiply by 100 for a more meaningful score
     }
     
