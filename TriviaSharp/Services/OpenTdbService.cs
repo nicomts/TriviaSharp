@@ -1,3 +1,5 @@
+using TriviaSharp.Utils;
+
 namespace TriviaSharp.Services;
 
 using System;
@@ -14,6 +16,13 @@ public class OpenTdbService
     private readonly ICategoryRepository _categoryRepo;
     private readonly IQuestionSetRepository _questionSetRepo;
 
+    /// <summary>
+    /// Constructor for OpenTdbService.
+    /// </summary>
+    /// <param name="questionRepo"></param>
+    /// <param name="answerRepo"></param>
+    /// <param name="categoryRepo"></param>
+    /// <param name="questionSetRepo"></param>
     public OpenTdbService(
         IQuestionRepository questionRepo,
         IAnswerRepository answerRepo,
@@ -26,8 +35,14 @@ public class OpenTdbService
         _questionSetRepo = questionSetRepo;
     }
 
+    /// <summary>
+    /// Converts an ApiCategory to a Category model.
+    /// </summary>
+    /// <param name="apiCategory"></param>
+    /// <returns>A Category object</returns>
     public static Category ToCategory(ApiCategory apiCategory)
     {
+        GlobalConfig.Logger.Information($"OpenTdbService: Mapping API category: {apiCategory.Name} with ID: {apiCategory.Id}");
         return new Category
         {
             Id = apiCategory.Id,
@@ -35,8 +50,12 @@ public class OpenTdbService
         };
     }
     
+    /// <summary>
+    /// Imports trivia categories from the OpenTDB API into the local database.
+    /// </summary>
     public async Task ImportCategories()
     {
+        GlobalConfig.Logger.Information($"OpenTdbService: Attempting to import trivia categories from OpenTDB API");
         var categories = await OpenTdbFetcher.GetTriviaCategoriesAsync();
         foreach (var apiCategory in categories)
         {
@@ -48,11 +67,18 @@ public class OpenTdbService
             }
 
             await _categoryRepo.SaveChangesAsync();
+            GlobalConfig.Logger.Information($"OpenTdbService: Imported category: {category.Name} with ID: {category.Id}");
         }
     }
 
+    /// <summary>
+    /// Imports trivia questions from the OpenTDB API into the local database.
+    /// </summary>
+    /// <param name="apiQuestions"></param>
     public async Task ImportApiQuestions(ApiQuestion[] apiQuestions)
     {
+        GlobalConfig.Logger.Information("OpenTdbService: Attempting to import trivia questions from OpenTDB API");
+        
         // Ensure "OpenTDB" QuestionSet exists
         var questionSet = await _questionSetRepo.GetByNameAsync("OpenTDB");
         if (questionSet == null)
@@ -69,6 +95,7 @@ public class OpenTdbService
                 ?? new Category { Name = apiQ.Category };
             if (category.Id == 0)
                 await _categoryRepo.AddAsync(category);
+            GlobalConfig.Logger.Information("OpenTdbService: Processing question in category: {CategoryName}", category.Name);
             
            
             
@@ -84,12 +111,10 @@ public class OpenTdbService
                 apiQ.Difficulty,
                 questionSet);
             existingQuestion = existingQuestionQuery.FirstOrDefault();
-            // DEBUG CODE
-            // Console.WriteLine($"Checking question: {apiQ.QuestionText} in category: {category.Name} with difficulty: {apiQ.Difficulty}");
-            // Console.WriteLine($"Existing question data: {existingQuestion?.Text ?? "None"}");
             
             if (existingQuestion != null)
             {
+                GlobalConfig.Logger.Information("OpenTdbService: Question already exists, skipping: {QuestionText}", apiQ.QuestionText);
                 continue; // Skip to the next apiQ if question already exists
             }
             else
@@ -130,27 +155,8 @@ public class OpenTdbService
                 // Save changes after processing each question
                 await _questionRepo.SaveChangesAsync();
                 await _answerRepo.SaveChangesAsync();
+                GlobalConfig.Logger.Information("OpenTdbService: Imported question: {QuestionText} with category: {CategoryName}", apiQ.QuestionText, category.Name);
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            // if (existingQuestion == null)
-            // {
-            //     // Add question to the repository
-            //     await _questionRepo.AddAsync(question);
-            //     await _questionRepo.SaveChangesAsync();
-            // }
-            // else
-            // {
-            //     continue; // Skip to the next apiQ
-            // }
-            //
-            
             
         }
     }
