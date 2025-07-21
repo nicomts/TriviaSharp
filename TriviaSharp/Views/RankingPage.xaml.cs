@@ -24,5 +24,6 @@ public partial class RankingPage : ContentPage
         var sessions = await GlobalConfig.QuizSessionRepo.GetTop20ByScoreAsync();
         QuizSessions = sessions.ToList();
         RankingList.ItemsSource = QuizSessions;
+        GlobalConfig.Logger.Information("RankingPage: Loaded top 20 quiz sessions for ranking display");
     }
 }
