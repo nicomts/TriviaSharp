@@ -21,5 +21,9 @@ public static class UnitTestsRunner
         userServiceTests.ChangePasswordAsync_ShouldReturnUserNotFound_WhenUserDoesNotExist().GetAwaiter().GetResult();
         userServiceTests = new UserServiceTests();
         userServiceTests.ChangePasswordAsync_ShouldReturnIncorrectPassword_WhenOldPasswordIsInvalid().GetAwaiter().GetResult();
+        
+        // Quiz service tests
+        var quizServiceTests = new QuizServiceTests();
+        quizServiceTests.CalculateScore_ShouldReturnCorrectScore_WhenGivenValidParameters();
     }
 }
