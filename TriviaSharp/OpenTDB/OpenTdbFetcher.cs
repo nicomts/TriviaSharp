@@ -7,7 +7,7 @@ using System.Text.Json;
 
 public class OpenTdbFetcher
 {
-    private static readonly HttpClient _httpClient = new HttpClient();
+    private static HttpClient _httpClient = new HttpClient();
     private const string BaseApiUrl = "https://opentdb.com/api.php";
     private const string TokenApiUrl = "https://opentdb.com/api_token.php";
     private const string CategoriesApiUrl = "https://opentdb.com/api_category.php";
@@ -225,5 +225,14 @@ public class OpenTdbFetcher
     public static void HttpClientDispose()
     {
         _httpClient.Dispose();
+    }
+
+    /// <summary>
+    /// Sets a custom HttpClient instance. This is mainly for testing purposes.
+    /// </summary>
+    /// <param name="client">The HttpClient instance to be used.</param>
+    public static void SetHttpClient(HttpClient client)
+    {
+        _httpClient = client;
     }
 }

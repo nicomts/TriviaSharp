@@ -25,5 +25,9 @@ public static class UnitTestsRunner
         // Quiz service tests
         var quizServiceTests = new QuizServiceTests();
         quizServiceTests.CalculateScore_ShouldReturnCorrectScore_WhenGivenValidParameters();
+        
+        // OpenTdbFetcher test (prints result)
+        var openTdbFetcherTests = new OpenTdbFetcherTests();
+        openTdbFetcherTests.RunFetcherTestWithResult().GetAwaiter().GetResult();
     }
 }

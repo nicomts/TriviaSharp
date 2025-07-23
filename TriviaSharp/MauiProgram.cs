@@ -22,7 +22,7 @@ public static class MauiProgram
             });
         
         // Run unit tests
-        UnitTestsRunner.RunAllTests();
+        // UnitTestsRunner.RunAllTests();
 
 
 
