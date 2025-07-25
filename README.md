@@ -108,3 +108,6 @@ classDiagram
     TriviaDbContext "1" -- "0..*" QuestionSet
     TriviaDbContext "1" -- "0..*" QuizSession
 ``` 
+## Package Diagram
+![Package Diagram](docs/assets/triviasharp-package.png)
+
