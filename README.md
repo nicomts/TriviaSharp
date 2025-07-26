@@ -158,7 +158,7 @@ This user has admin privileges. You can change the password or create additional
 
 ## Registration
 1. Navigate to "Register" page.
-2. Enter a username and password.
+2. Enter a username, password and confirm password.
 3. If you are logged in as an admin, you can register the new user with admin role.
 4. Click the "Register" button.
 
@@ -172,7 +172,7 @@ This user has admin privileges. You can change the password or create additional
 
 ## Rankings
 1. Navigate to "Rankings" page.
-2. You will see the top 20 users with the highest scores.
+2. You will see the top 20 Quiz Sessions with the highest scores.
 
 ## Change Password
 1. Login as a user (admin or regular user).
