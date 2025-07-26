@@ -129,6 +129,21 @@ classDiagram
 - XUnit 2.9.3
 - OpenTDB API
 
+# Setup
+1. Clone the repository and navigate to the project directory.
+2. Restore the NuGet packages:
+   ```bash
+   dotnet restore
+   ```
+3. Build the project:
+   ```bash
+   dotnet build
+   ```
+4. Run the application:
+   ```bash
+   dotnet run
+   ```
+
 # Usage
 ## Login
 1. Navigate to "Login" page.
@@ -182,3 +197,7 @@ This user has admin privileges. You can change the password or create additional
 4. Enter the username of the user you want to delete.
 5. Click the "Delete User" button.
 6. Confirm the deletion in the dialog that appears.
+
+## Find log files and database
+- The SQLite database file is located in the `~/TriviaSharp` directory.
+- Log files are located in the `~/TriviaSharp/logs` directory.
