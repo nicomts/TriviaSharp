@@ -156,6 +156,8 @@ The default credentials are:
 
 This user has admin privileges. You can change the password or create additional users with the registration feature.
 
+https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
+
 ## Registration
 1. Navigate to "Register" page.
 2. Enter a username, password and confirm password.
