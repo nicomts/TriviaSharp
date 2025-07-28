@@ -164,6 +164,8 @@ https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
 3. If you are logged in as an admin, you can register the new user with admin role.
 4. Click the "Register" button.
 
+https://github.com/user-attachments/assets/c0859f8a-86d8-4ff8-a162-7244054c8e98
+
 ## Quiz
 1. Login as a user (admin or regular user).
 2. Navigate to "New Quiz" page.
@@ -172,9 +174,13 @@ https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
 5. Read the question and click the answer you think is correct.
 6. After answering all questions, you will see your score.
 
+https://github.com/user-attachments/assets/0320e7fb-79fc-4289-a95f-71d99e02baf5
+
 ## Rankings
 1. Navigate to "Rankings" page.
 2. You will see the top 20 Quiz Sessions with the highest scores.
+
+https://github.com/user-attachments/assets/46101934-48fd-42b3-9797-7705db944b67
 
 ## Change Password
 1. Login as a user (admin or regular user).
@@ -182,6 +188,8 @@ https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
 3. Navigate to "Change Password" section.
 4. Enter your current password, new password, and confirm the new password.
 5. Click the "Change Password" button.
+
+https://github.com/user-attachments/assets/f1da45b1-5e49-4f0c-ba8b-edc328c46f2f
 
 ## Import Questions from OpenTDB
 1. Login as an admin user.
@@ -192,6 +200,8 @@ https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
 6. Select category, type, difficulty, and question count.
 7. Click "Get Questions" to fetch and save questions from OpenTDB.
 
+https://github.com/user-attachments/assets/d4dbb0b7-3624-42b3-bbf9-bdbe2ad489b8
+
 ## Delete User
 1. Login as an admin user.
 2. Navigate to "Settings" page.
@@ -199,6 +209,8 @@ https://github.com/user-attachments/assets/2817708a-776d-4622-9371-0df5565b7e0a
 4. Enter the username of the user you want to delete.
 5. Click the "Delete User" button.
 6. Confirm the deletion in the dialog that appears.
+
+https://github.com/user-attachments/assets/14750798-aac4-4d1b-b5ea-0ec1d1aaea00
 
 ## Find log files and database
 - The SQLite database file is located in the `~/TriviaSharp` directory.
