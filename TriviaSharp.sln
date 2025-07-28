@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriviaSharp", "TriviaSharp\TriviaSharp.csproj", "{9BBEC3F9-8814-433A-B14F-3E2DA33A609E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriviaSharp.Tests", "TriviaSharp.Tests\TriviaSharp.Tests.csproj", "{AFD239C9-D0AD-49CB-A0E7-381571EDDB53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{9BBEC3F9-8814-433A-B14F-3E2DA33A609E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BBEC3F9-8814-433A-B14F-3E2DA33A609E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BBEC3F9-8814-433A-B14F-3E2DA33A609E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD239C9-D0AD-49CB-A0E7-381571EDDB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD239C9-D0AD-49CB-A0E7-381571EDDB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD239C9-D0AD-49CB-A0E7-381571EDDB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD239C9-D0AD-49CB-A0E7-381571EDDB53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

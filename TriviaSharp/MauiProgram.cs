@@ -4,7 +4,6 @@ using TriviaSharp.Data;
 using TriviaSharp.Data.Repositories;
 using TriviaSharp.OpenTDB;
 using TriviaSharp.Services;
-using TriviaSharp.Tests;
 
 namespace TriviaSharp;
 
@@ -21,8 +20,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
         
-        // Run unit tests
-        // UnitTestsRunner.RunAllTests();
+
 
 
 
