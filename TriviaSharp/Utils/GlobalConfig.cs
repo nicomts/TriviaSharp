@@ -6,12 +6,13 @@ using TriviaSharp.Data.Repositories;
 using TriviaSharp.Models;
 using Serilog;
 using Serilog.Events;
+using TriviaSharp.Providers;
 
 public static class GlobalConfig
 {
     // Logger initialization
-    public static ILogger Logger = SetupLogger(); 
-    
+    public static ILogger Logger = SetupLogger();
+
     // Database initialization and repositories
     public static TriviaDbContext DbContext = SetupDatabase();
     public static UserRepository UserRepo = new UserRepository(DbContext);
@@ -20,7 +21,7 @@ public static class GlobalConfig
     public static AnswerRepository AnswerRepo = new AnswerRepository(DbContext);
     public static CategoryRepository CategoryRepo = new CategoryRepository(DbContext);
     public static QuizSessionRepository QuizSessionRepo = new QuizSessionRepository(DbContext);
-    
+
     // Services
     public static UserService UserService = new UserService(UserRepo);
     public static OpenTdbService OpenTdbService = new OpenTdbService(
@@ -29,10 +30,13 @@ public static class GlobalConfig
         CategoryRepo,
         QuestionSetRepo
     );
-    
+    public static string SessionToken = "";
+    public static ITriviaProvider TriviaProvider = new OpenTdbTriviaProvider();
+
     // Session management
     public static User? CurrentUser = null;
     public static QuestionSet CurrentQuestionSet = SetupQuestionSet();
+
 
 
 
@@ -40,8 +44,9 @@ public static class GlobalConfig
     static GlobalConfig()
     {
         EnsureAdminUser();
+        SetupProvider();
     }
-    
+
     public static ILogger SetupLogger()
     {
         var logFilePath = System.IO.Path.Combine(
@@ -55,7 +60,7 @@ public static class GlobalConfig
             .MinimumLevel.Debug() // Set the minimum level for all logs
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information) // Suppress verbose Microsoft logs
             .MinimumLevel.Override("System", LogEventLevel.Information)    // Suppress verbose System logs
-            // If you are using SQLite/EF Core, you might want to override their log levels:
+                                                                           // If you are using SQLite/EF Core, you might want to override their log levels:
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.Data.Sqlite", LogEventLevel.Information)
             .Enrich.FromLogContext() // Enables structured logging context
@@ -69,7 +74,7 @@ public static class GlobalConfig
             )
             .CreateLogger();
     }
-    
+
     public static TriviaDbContext SetupDatabase()
     {
         // Locate database file at ~/.config/TriviaSharp/triviasharp.db
@@ -79,7 +84,7 @@ public static class GlobalConfig
             "TriviaSharp",
             "triviasharp.db"
         );
-        
+
         var dbDir = System.IO.Path.GetDirectoryName(dbPath);
         if (!System.IO.Directory.Exists(dbDir))
         {
@@ -93,7 +98,7 @@ public static class GlobalConfig
         context.Database.EnsureCreated();
         return context;
     }
-    
+
     public static void EnsureAdminUser()
     {
         // Check if any user with Admin role exists
@@ -103,7 +108,7 @@ public static class GlobalConfig
             UserService.RegisterAsync("admin", "triviasharp", Models.Enums.UserRole.Admin);
         }
     }
-    
+
     // Method to setup a default QuestionSet. It retrieves the question set with the name "OpenTDB" from the database or creates a new one if it doesn't exist.
     public static QuestionSet SetupQuestionSet()
     {
@@ -119,5 +124,11 @@ public static class GlobalConfig
         }
         return questionSet;
     }
-    
+
+    // Use the trivia provider to get the session token and save it on global config
+    public static async void SetupProvider()
+    {
+        await TriviaProvider.SetupAsync();
+    }
+
 }

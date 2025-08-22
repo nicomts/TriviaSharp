@@ -17,7 +17,6 @@ public partial class OpenTdbPanel : ContentPage
     int selectedNumber = 10; // Default value for number of questions
     string type = "";
     string selectedDifficulty = "";
-    string sessionToken = "";
     
     private class TypeOption
     {
@@ -34,7 +33,7 @@ public partial class OpenTdbPanel : ContentPage
             new TypeOption { Display = "Multiple choice", Value = "multiple" },
             new TypeOption { Display = "True or False", Value = "boolean" }
         };
-        RequestWarning.Text = "Warning: You need to wait 5 seconds before making another request to the OpenTDB API. This is to prevent hitting the rate limit of the API. If you hit the rate limit, you will receive an error message.";
+        RequestWarning.Text = "Warning: You need to wait 5 seconds before making another request to the API. This is to prevent hitting the rate limit of the API. If you hit the rate limit, you will receive an error message.";
     }
 
     protected override async void OnAppearing()
@@ -51,23 +50,12 @@ public partial class OpenTdbPanel : ContentPage
         }
     }
    
-    private async void OnSessionTokenButtonClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            sessionToken = await TriviaSharp.OpenTDB.OpenTdbFetcher.GetSessionTokenAsync();
-            SessionTokenLabel.Text = $"Session Token: {sessionToken}";
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Error", $"Failed to fetch session token: {ex.Message}", "OK");
-        }
-    }
+
     private async void OnCategoriesButtonClicked(object sender, EventArgs e)
     {
         try
         {
-            categories = await TriviaSharp.OpenTDB.OpenTdbFetcher.GetTriviaCategoriesAsync();
+            categories = await GlobalConfig.TriviaProvider.GetCategories();
             CategoriesCollectionView.ItemsSource = categories;
             CategoriesCollectionView.IsVisible = true;
         }
@@ -100,8 +88,6 @@ public partial class OpenTdbPanel : ContentPage
     {
         selectedDifficulty = DifficultyCollectionView.SelectedItem as string;
         selectedDifficulty = selectedDifficulty.ToLower();
-        // DEBUG CODE
-        // Console.WriteLine($"Selected Difficulty: {selectedDifficulty}");
         
         
     }
@@ -124,19 +110,16 @@ public partial class OpenTdbPanel : ContentPage
             DisplayAlert("Error", "Please select a question type.", "OK");
             return;
         }
-        
+
         try
         {
-            var questions = await OpenTdbFetcher.GetTriviaQuestionsAsync(
+            await GlobalConfig.TriviaProvider.GetQuestions(
                 amount: selectedNumber,
                 category: selectedCategory.Id,
                 difficulty: selectedDifficulty,
-                type: type,
-                sessionToken: sessionToken
-                // selectedNumber, selectedCategory.Id, selectedDifficulty, type, sessionToken
+                type: type
             );
-            GlobalConfig.OpenTdbService.ImportApiQuestions(questions);
-            await DisplayAlert("Success", $"{questions.Length} questions fetched successfully!", "OK");
+            await DisplayAlert("Success", $"{selectedNumber} questions fetched successfully!", "OK");
 
         }
         catch (Exception ex)
