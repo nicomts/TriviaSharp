@@ -15,22 +15,22 @@ public partial class QuizPage : ContentPage
     private readonly List<Question> _questions;
     private int _currentIndex = 0;
     private int _correctCount = 0;
-    private DateTime _startDate;
+
     private System.Timers.Timer _timer;
     private double _elapsedSeconds = 0;
-    private string _difficulty;
+
     private QuizService _quizService;
-    private int _score = 0;
-    // private QuizSession _quizSession = null;
+    private QuizSession _quizSession;
+
 
     public QuizPage(List<Question> questions, string difficulty)
     {
         InitializeComponent();
         _questions = questions;
-        _difficulty = difficulty;
         _quizService = new QuizService();
-        _startDate = DateTime.UtcNow;
-        GlobalConfig.Logger.Information($"QuizPage: Starting quiz with {_questions.Count} questions at difficulty '{_difficulty}'");
+        _quizSession = _quizService.StartSession(GlobalConfig.CurrentUser, difficulty, DateTime.UtcNow);
+
+        GlobalConfig.Logger.Information($"QuizPage: Starting quiz with {_questions.Count} questions at difficulty '{difficulty}'");
         StartTimer();
         ShowQuestion();
     }
@@ -55,22 +55,12 @@ public partial class QuizPage : ContentPage
         if (_currentIndex >= _questions.Count)
         {
             _timer.Stop();
-            TimerLabel.Text = $"Finished! Time: {_elapsedSeconds:F1} s";
+            _quizService.EndSessionAsync(_quizSession, _elapsedSeconds);
+            TimerLabel.Text = $"Finished! Time: {_quizSession.TimeTakenSeconds:F1} s";
             QuestionLabel.Text = "Quiz Complete!";
             AnswersLayout.Children.Clear();
-            _score = _quizService.CalculateScore(_questions.Count, _correctCount, _difficulty, _elapsedSeconds);
-            ScoreLabel.Text = $"Score: {_score}";
-            GlobalConfig.Logger.Information($"QuizPage: Quiz completed with score {_score} at difficulty '{_difficulty}'");
-            QuizSession quizSession = new QuizSession
-            {
-                Date = _startDate,
-                Score = _score,
-                TimeTakenSeconds = _elapsedSeconds,
-                User = GlobalConfig.CurrentUser
-            };
-            GlobalConfig.QuizSessionRepo.AddAsync(quizSession);
-            GlobalConfig.QuizSessionRepo.SaveChangesAsync();
-            GlobalConfig.Logger.Information($"QuizPage: Quiz session created with ID {quizSession.Id} for user {GlobalConfig.CurrentUser?.Username ?? "unknown user"}");
+            ScoreLabel.Text = $"Score: {_quizSession.Score}";
+            GlobalConfig.Logger.Information($"QuizPage: Quiz completed with score {_quizSession.Score} at difficulty '{_quizSession.Difficulty}'");
             return;
         }
 
@@ -87,17 +77,17 @@ public partial class QuizPage : ContentPage
                 Text = answer.Text,
                 BackgroundColor = Colors.MediumPurple
             };
-            btn.Clicked += async (s, e) => await OnAnswerClicked(btn, answer.IsCorrect);
+            btn.Clicked += async (s, e) => await OnAnswerClicked(btn, answer);
             AnswersLayout.Children.Add(btn);
         }
     }
 
-    private async Task OnAnswerClicked(Button btn, bool isCorrect)
+    private async Task OnAnswerClicked(Button btn, Answer answer)
     {
         foreach (var child in AnswersLayout.Children.OfType<Button>())
             child.IsEnabled = false;
 
-        if (isCorrect)
+        if (answer.IsCorrect)
         {
             btn.BackgroundColor = Colors.DarkGreen;
             _correctCount++;
@@ -115,13 +105,14 @@ public partial class QuizPage : ContentPage
         }
         ScoreLabel.Text = $"Correct: {_correctCount}";
 
+        _quizService.AddAnswer(_quizSession, _questions[_currentIndex], answer);
         await Task.Delay(1000); // Wait before next question
         _currentIndex++;
         ShowQuestion();
     }
 
     // Expose results if needed
-    public DateTime QuizStartDate => _startDate;
+    // public DateTime QuizStartDate => _startDate;
     public double TimeTakenSeconds => _elapsedSeconds;
     public int CorrectAnswers => _correctCount;
 }

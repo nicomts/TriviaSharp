@@ -31,9 +31,18 @@ classDiagram
     }
     class QuizSession {
         +int Id
+        +DateTime Date
         +User User
-        +QuestionSet QuestionSet
         +int Score
+        +double TimeTakenSeconds
+        +string Difficulty
+        +ICollection<QuizAnswer> Answers
+    }
+    class QuizAnswer {
+        +int Id
+        +int QuizSessionId
+        +int QuestionId
+        +int SelectedOptionId
     }
     class User {
         +int Id
@@ -90,7 +99,7 @@ classDiagram
     Question *-- Answer
     QuestionSet *-- Question
     QuizSession *-- User
-    QuizSession *-- QuestionSet
+    QuizSession *-- QuizAnswer
     LoginResult "1" -- "0..1" User
     ApiCategoryResponse "1" -- "0..*" ApiCategory
     ApiResponse "1" -- "0..*" ApiQuestion

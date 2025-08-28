@@ -14,4 +14,9 @@ public class QuizSessionRepository : GenericRepository<QuizSession>, IQuizSessio
             .Take(20)
             .ToListAsync();
     }
+    public async Task Update(QuizSession quizSession)
+    {
+        _context.QuizSessions.Update(quizSession);
+        await _context.SaveChangesAsync();
+    }
 }

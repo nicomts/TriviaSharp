@@ -11,4 +11,5 @@ public class TriviaDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<QuizSession> QuizSessions => Set<QuizSession>();
     public DbSet<QuestionSet> QuestionSets => Set<QuestionSet>();
+    public DbSet<QuizAnswer> QuizAnswers => Set<QuizAnswer>();
 }

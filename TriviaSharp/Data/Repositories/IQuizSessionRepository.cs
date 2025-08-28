@@ -4,4 +4,5 @@ using TriviaSharp.Models;
 public interface IQuizSessionRepository : IGenericRepository<QuizSession>
 {
     Task<IEnumerable<QuizSession>> GetTop20ByScoreAsync();
+    Task Update(QuizSession quizSession);
 }

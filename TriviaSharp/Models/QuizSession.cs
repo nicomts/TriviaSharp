@@ -7,4 +7,6 @@ public class QuizSession
     public User User { get; set; }
     public int Score { get; set; }
     public double TimeTakenSeconds { get; set; }
+    public string Difficulty { get; set; }
+    public ICollection<QuizAnswer> Answers { get; set; } = new List<QuizAnswer>();
 }
